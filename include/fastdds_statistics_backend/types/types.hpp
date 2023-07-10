@@ -122,7 +122,7 @@ enum class EntityKind
     PROCESS,
 
     /// Abstract DDS network by Domain or by Discovery Server
-    DOMAIN,
+    DDS_DOMAIN,
 
     /// DDS Topic
     TOPIC,

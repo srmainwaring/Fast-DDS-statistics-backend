@@ -730,7 +730,7 @@ public:
 
         // Need to reconstruct the monitors
         auto domains = details::StatisticsBackendData::get_instance()->database_->get_entities(
-            EntityKind::DOMAIN, EntityId::all());
+            EntityKind::DDS_DOMAIN, EntityId::all());
         for (auto domain : domains)
         {
             std::unique_ptr<details::Monitor> monitor = std::make_unique<details::Monitor>();

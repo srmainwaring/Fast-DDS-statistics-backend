@@ -549,7 +549,7 @@ public:
     {
         NONE,
         PHYSICAL,
-        DOMAIN
+        DDS_DOMAIN
     };
 
     void test_entity_discovery(
@@ -575,7 +575,7 @@ public:
                             .WillOnce(Invoke(&discovery_args_, &DomainEntityDiscoveryArgs::on_discovery));
                     EXPECT_CALL(domain_listener_, on_participant_discovery(_, _, _)).Times(0);
                 }
-                else if (listener_kind == DOMAIN)
+                else if (listener_kind == DDS_DOMAIN)
                 {
                     EXPECT_CALL(physical_listener_, on_participant_discovery(_, _, _)).Times(0);
                     EXPECT_CALL(domain_listener_, on_participant_discovery(monitor_id_, EntityId(1), _)).Times(1)
@@ -604,7 +604,7 @@ public:
                             .WillOnce(Invoke(&discovery_args_, &DomainEntityDiscoveryArgs::on_discovery));
                     EXPECT_CALL(domain_listener_, on_topic_discovery(_, _, _)).Times(0);
                 }
-                else if (listener_kind == DOMAIN)
+                else if (listener_kind == DDS_DOMAIN)
                 {
                     EXPECT_CALL(physical_listener_, on_topic_discovery(_, _, _)).Times(0);
                     EXPECT_CALL(domain_listener_, on_topic_discovery(monitor_id_, EntityId(1), _)).Times(1)
@@ -633,7 +633,7 @@ public:
                             .WillOnce(Invoke(&discovery_args_, &DomainEntityDiscoveryArgs::on_discovery));
                     EXPECT_CALL(domain_listener_, on_datareader_discovery(_, _, _)).Times(0);
                 }
-                else if (listener_kind == DOMAIN)
+                else if (listener_kind == DDS_DOMAIN)
                 {
                     EXPECT_CALL(physical_listener_, on_datareader_discovery(_, _, _)).Times(0);
                     EXPECT_CALL(domain_listener_, on_datareader_discovery(monitor_id_, EntityId(1), _)).Times(1)
@@ -662,7 +662,7 @@ public:
                             .WillOnce(Invoke(&discovery_args_, &DomainEntityDiscoveryArgs::on_discovery));
                     EXPECT_CALL(domain_listener_, on_datawriter_discovery(_, _, _)).Times(0);
                 }
-                else if (listener_kind == DOMAIN)
+                else if (listener_kind == DDS_DOMAIN)
                 {
                     EXPECT_CALL(physical_listener_, on_datawriter_discovery(_, _, _)).Times(0);
                     EXPECT_CALL(domain_listener_, on_datawriter_discovery(monitor_id_, EntityId(1), _)).Times(1)
@@ -778,7 +778,7 @@ public:
             DataKindMask::all());
 
         // Expectation: Only the domain listener is called
-        test_entity_discovery(DOMAIN, DiscoveryStatus::DISCOVERY,
+        test_entity_discovery(DDS_DOMAIN, DiscoveryStatus::DISCOVERY,
                 [&](
                     EntityId domain_id,
                     EntityId entity_id,
@@ -793,7 +793,7 @@ public:
                 });
 
         // Expectation: Only the domain listener is called again
-        test_entity_discovery(DOMAIN, DiscoveryStatus::DISCOVERY,
+        test_entity_discovery(DDS_DOMAIN, DiscoveryStatus::DISCOVERY,
                 [&](
                     EntityId domain_id,
                     EntityId entity_id,
@@ -808,7 +808,7 @@ public:
                 });
 
         // Expectation: The domain listener is called again with updates
-        test_entity_discovery(DOMAIN, DiscoveryStatus::UPDATE,
+        test_entity_discovery(DDS_DOMAIN, DiscoveryStatus::UPDATE,
                 [&](
                     EntityId domain_id,
                     EntityId entity_id,
@@ -823,7 +823,7 @@ public:
                 });
 
         // Expectation: The domain listener is called again with removal
-        test_entity_discovery(DOMAIN, DiscoveryStatus::UNDISCOVERY,
+        test_entity_discovery(DDS_DOMAIN, DiscoveryStatus::UNDISCOVERY,
                 [&](
                     EntityId domain_id,
                     EntityId entity_id,
@@ -857,7 +857,7 @@ TEST_P(calling_user_listeners_tests_domain_entities, entity_discovered)
         DataKindMask::all());
 
     // Expectation: Only the domain listener is called
-    test_entity_discovery(DOMAIN, DiscoveryStatus::DISCOVERY,
+    test_entity_discovery(DDS_DOMAIN, DiscoveryStatus::DISCOVERY,
             [&](
                 EntityId domain_id,
                 EntityId entity_id,
@@ -872,7 +872,7 @@ TEST_P(calling_user_listeners_tests_domain_entities, entity_discovered)
             });
 
     // Expectation: The domain listener is called again
-    test_entity_discovery(DOMAIN, DiscoveryStatus::DISCOVERY,
+    test_entity_discovery(DDS_DOMAIN, DiscoveryStatus::DISCOVERY,
             [&](
                 EntityId domain_id,
                 EntityId entity_id,
@@ -887,7 +887,7 @@ TEST_P(calling_user_listeners_tests_domain_entities, entity_discovered)
             });
 
     // Expectation: The domain listener is called with updates
-    test_entity_discovery(DOMAIN, DiscoveryStatus::UPDATE,
+    test_entity_discovery(DDS_DOMAIN, DiscoveryStatus::UPDATE,
             [&](
                 EntityId domain_id,
                 EntityId entity_id,
@@ -902,7 +902,7 @@ TEST_P(calling_user_listeners_tests_domain_entities, entity_discovered)
             });
 
     // Expectation: The user listener is called with removal
-    test_entity_discovery(DOMAIN, DiscoveryStatus::UNDISCOVERY,
+    test_entity_discovery(DDS_DOMAIN, DiscoveryStatus::UNDISCOVERY,
             [&](
                 EntityId domain_id,
                 EntityId entity_id,
@@ -1050,7 +1050,7 @@ TEST_F(calling_user_listeners_DeathTest, wrong_entity_kind)
     // Expectation: The call asserts
     ASSERT_DEATH(details::StatisticsBackendData::get_instance()->on_physical_entity_discovery(
                 EntityId(1),
-                EntityKind::DOMAIN,
+                EntityKind::DDS_DOMAIN,
                 details::StatisticsBackendData::DiscoveryStatus::DISCOVERY),
             ".*");
 
@@ -1228,7 +1228,7 @@ public:
     {
         NONE,
         PHYSICAL,
-        DOMAIN
+        DDS_DOMAIN
     };
 
     void test_data_availability(
@@ -1241,7 +1241,7 @@ public:
             EXPECT_CALL(domain_listener_, on_data_available(_, _, _)).Times(0);
 
         }
-        else if (listener_kind == DOMAIN)
+        else if (listener_kind == DDS_DOMAIN)
         {
             EXPECT_CALL(physical_listener_, on_data_available(_, _, _)).Times(0);
             EXPECT_CALL(domain_listener_, on_data_available(monitor_id_, EntityId(1), data_kind_)).Times(1);
@@ -1290,7 +1290,7 @@ public:
             data_mask);
 
         // Expectation: Only the domain listener is called
-        test_data_availability(DOMAIN);
+        test_data_availability(DDS_DOMAIN);
     }
 
 };
@@ -1314,10 +1314,10 @@ TEST_P(calling_user_listeners_tests_datas, data_available)
         DataKindMask::all());
 
     // Expectation: Only the domain listener is called
-    test_data_availability(DOMAIN);
+    test_data_availability(DDS_DOMAIN);
 
     // Expectation: The domain listener is called again
-    test_data_availability(DOMAIN);
+    test_data_availability(DDS_DOMAIN);
 }
 
 TEST_P(calling_user_listeners_tests_datas, data_available_callback_not_in_mask)
