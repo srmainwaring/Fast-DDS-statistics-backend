@@ -285,7 +285,7 @@ void Database::insert_nts(
             process->user->processes[process->id] = process;
             break;
         }
-        case EntityKind::DOMAIN:
+        case EntityKind::DDS_DOMAIN:
         {
             std::shared_ptr<Domain> domain = std::static_pointer_cast<Domain>(entity);
 
@@ -1436,7 +1436,7 @@ std::vector<std::pair<EntityId, EntityId>> Database::get_entities_by_name(
             }
             break;
         }
-        case EntityKind::DOMAIN:
+        case EntityKind::DDS_DOMAIN:
         {
             for (const auto& domain_it : domains_)
             {
@@ -1528,7 +1528,7 @@ void Database::erase(
     // Check that the given domain_id corresponds to a known monitor.
     // Upper layer ensures that the monitor has been stopped.
     // Upper layer also ensures that the monitor_id is valid and corresponds to a known domain.
-    if (EntityKind::DOMAIN != get_entity_kind(domain_id))
+    if (EntityKind::DDS_DOMAIN != get_entity_kind(domain_id))
     {
         throw BadParameter("Incorrect EntityKind");
     }
@@ -2206,7 +2206,7 @@ const std::vector<std::shared_ptr<const Entity>> Database::get_entities(
             case EntityKind::PROCESS:
                 map_to_vector(processes_, entities);
                 break;
-            case EntityKind::DOMAIN:
+            case EntityKind::DDS_DOMAIN:
                 map_to_vector(domains_, entities);
                 break;
             case EntityKind::TOPIC:
@@ -2247,7 +2247,7 @@ const std::vector<std::shared_ptr<const Entity>> Database::get_entities(
                         }
                         break;
                     case EntityKind::PROCESS:
-                    case EntityKind::DOMAIN:
+                    case EntityKind::DDS_DOMAIN:
                     case EntityKind::PARTICIPANT:
                     case EntityKind::TOPIC:
                     case EntityKind::DATAREADER:
@@ -2281,7 +2281,7 @@ const std::vector<std::shared_ptr<const Entity>> Database::get_entities(
                             entities.push_back(process.second);
                         }
                         break;
-                    case EntityKind::DOMAIN:
+                    case EntityKind::DDS_DOMAIN:
                     case EntityKind::PARTICIPANT:
                     case EntityKind::TOPIC:
                     case EntityKind::DATAREADER:
@@ -2321,7 +2321,7 @@ const std::vector<std::shared_ptr<const Entity>> Database::get_entities(
                             entities.push_back(participant.second);
                         }
                         break;
-                    case EntityKind::DOMAIN:
+                    case EntityKind::DDS_DOMAIN:
                     case EntityKind::TOPIC:
                     case EntityKind::DATAREADER:
                     case EntityKind::DATAWRITER:
@@ -2337,12 +2337,12 @@ const std::vector<std::shared_ptr<const Entity>> Database::get_entities(
                 }
                 break;
             }
-            case EntityKind::DOMAIN:
+            case EntityKind::DDS_DOMAIN:
             {
                 const std::shared_ptr<const Domain>& domain = std::dynamic_pointer_cast<const Domain>(origin);
                 switch (entity_kind)
                 {
-                    case EntityKind::DOMAIN:
+                    case EntityKind::DDS_DOMAIN:
                         entities.push_back(domain);
                         break;
                     case EntityKind::PARTICIPANT:
@@ -2398,7 +2398,7 @@ const std::vector<std::shared_ptr<const Entity>> Database::get_entities(
                             entities.push_back(participant->process);
                         }
                         break;
-                    case EntityKind::DOMAIN:
+                    case EntityKind::DDS_DOMAIN:
                         entities.push_back(participant->domain);
                         break;
                     case EntityKind::PARTICIPANT:
@@ -2439,7 +2439,7 @@ const std::vector<std::shared_ptr<const Entity>> Database::get_entities(
                 const std::shared_ptr<const Topic>& topic = std::dynamic_pointer_cast<const Topic>(origin);
                 switch (entity_kind)
                 {
-                    case EntityKind::DOMAIN:
+                    case EntityKind::DDS_DOMAIN:
                         entities.push_back(topic->domain);
                         break;
                     case EntityKind::TOPIC:
@@ -2507,7 +2507,7 @@ const std::vector<std::shared_ptr<const Entity>> Database::get_entities(
                     case EntityKind::HOST:
                     case EntityKind::USER:
                     case EntityKind::PROCESS:
-                    case EntityKind::DOMAIN:
+                    case EntityKind::DDS_DOMAIN:
                     {
                         auto sub_entities = get_entities(entity_kind, writer->participant);
                         entities.insert(entities.end(), sub_entities.begin(), sub_entities.end());
@@ -2547,7 +2547,7 @@ const std::vector<std::shared_ptr<const Entity>> Database::get_entities(
                     case EntityKind::HOST:
                     case EntityKind::USER:
                     case EntityKind::PROCESS:
-                    case EntityKind::DOMAIN:
+                    case EntityKind::DDS_DOMAIN:
                     {
                         auto sub_entities = get_entities(entity_kind, reader->participant);
                         entities.insert(entities.end(), sub_entities.begin(), sub_entities.end());
@@ -2583,7 +2583,7 @@ const std::vector<std::shared_ptr<const Entity>> Database::get_entities(
                     case EntityKind::PROCESS:
                     case EntityKind::PARTICIPANT:
                     case EntityKind::TOPIC:
-                    case EntityKind::DOMAIN:
+                    case EntityKind::DDS_DOMAIN:
                         for (const auto& writer : locator->data_writers)
                         {
                             auto sub_entities = get_entities(entity_kind, writer.second);
@@ -4746,7 +4746,7 @@ void Database::change_entity_status_of_kind(
             }
             break;
         }
-        case EntityKind::DOMAIN:
+        case EntityKind::DDS_DOMAIN:
         {
             std::shared_ptr<Domain> domain;
 
@@ -5019,7 +5019,7 @@ void Database::change_entity_status(
     // Check that the entity is a discovered/undiscovered dds_entity or a started/stopped monitor
     assert(
         entity_kind == EntityKind::PARTICIPANT || entity_kind == EntityKind::DATAWRITER ||
-        entity_kind == EntityKind::DATAREADER || entity_kind == EntityKind::DOMAIN);
+        entity_kind == EntityKind::DATAREADER || entity_kind == EntityKind::DDS_DOMAIN);
 
     std::lock_guard<std::shared_timed_mutex> guard(mutex_);
     change_entity_status_of_kind(entity_id, active, entity_kind);
